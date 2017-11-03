@@ -15,7 +15,6 @@ class App extends Component {
     if (navigator.mediaDevices) {
       console.log('getUserMedia supported.');
       navigator.mediaDevices.getUserMedia({audio: true}).then((stream)=> {
-        
         this.audioInput = this.audioContext.createMediaStreamSource(stream);
         this.recorder = this.audioContext.createScriptProcessor(2048, 1, 1);
         this.recorder.onaudioprocess = e => {
@@ -36,8 +35,7 @@ class App extends Component {
   stopRecord = ()=>{ 
     this.recorder && this.recorder.disconnect();
     this.audioInput && this.audioInput.disconnect();
-    this.setState({samples:this.samples})
-    
+    this.setState({samples:this.samples});
   }
 
   render() {
@@ -46,7 +44,6 @@ class App extends Component {
       <div style={{padding:10}} className="App">
         <div style={{padding:10}} onClick={this.startRecord}>Start recording</div>
         <div style={{padding:10}}onClick={this.stopRecord}>Stop recording</div>
-
         <div> nr of samples for 2048 {this.state.samples.length}</div>
         <div>{JSON.stringify(samples[samples.length-1])}</div>
       </div>
@@ -54,7 +51,6 @@ class App extends Component {
     );
   }
 }
-
 
 
 export default App;
