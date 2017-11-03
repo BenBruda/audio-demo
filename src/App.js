@@ -13,10 +13,10 @@ class App extends Component {
   componentDidMount(){
     if (navigator.mediaDevices) {
       console.log('getUserMedia supported.');
-      navigator.getUserMedia({audio: true}, (stream)=> {
+      navigator.mediaDevices.getUserMedia({audio: true}).then((stream)=> {
         this.audio.srcObject = stream;
         this.audio.play()
-      },(err) =>{
+      }).catch((err) =>{
           console.log('err' + err);
       });
   
