@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 const AudioContext = window.AudioContext || window.webkitAudioContext;
-// const audioContext = new AudioContext();
+const audioCtx = new AudioContext();
 
 class App extends Component {
   constructor(){
@@ -38,12 +38,25 @@ class App extends Component {
     this.setState({samples:this.samples});
   }
 
+  play = ()=>{ 
+    this.player = audioCtx.createBufferSource();
+
+    const newBuffer = audioCtx.createBuffer(1, this.samples.length, 44100);
+    newBuffer.getChannelData(0).set(this.samples);
+
+    this.player.buffer = newBuffer;
+    this.player.connect(audioCtx.destination);
+
+    this.player.start();
+  }
+
   render() {
     const samples = this.state.samples;
     return (
       <div style={{padding:10}} className="App">
         <div style={{padding:10}} onClick={this.startRecord}>Start recording</div>
         <div style={{padding:10}}onClick={this.stopRecord}>Stop recording</div>
+        <div style={{padding:10}}onClick={this.play}>play</div>
         <div> nr of samples for 2048 {this.state.samples.length}</div>
         <div>{JSON.stringify(samples[samples.length-1])}</div>
       </div>
