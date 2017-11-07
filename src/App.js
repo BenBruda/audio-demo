@@ -19,7 +19,7 @@ class App extends Component {
         this.recorder = this.audioContext.createScriptProcessor(2048, 1, 1);
         this.recorder.onaudioprocess = e => {
           const samples = e.inputBuffer.getChannelData(0);
-          this.samples = this.samples.concat(samples);
+          this.samples = this.samples.concat(Array.prototype.slice.call(samples));
         };
         this.audioInput.connect(this.recorder);
         this.recorder.connect(this.audioContext.destination);
@@ -35,30 +35,33 @@ class App extends Component {
   stopRecord = ()=>{ 
     this.recorder && this.recorder.disconnect();
     this.audioInput && this.audioInput.disconnect();
-    this.setState({samples:this.samples});
+    // this.setState({samples:this.samples});
   }
 
   play = ()=>{ 
-    this.player = audioCtx.createBufferSource();
 
-    const newBuffer = audioCtx.createBuffer(1, this.samples.length, 44100);
+    // const audio = new Audio()
+    // audio.srcObject = 
+
+    this.player = this.audioContext.createBufferSource();
+
+    const newBuffer = this.audioContext.createBuffer(1, this.samples.length, 44100);
     newBuffer.getChannelData(0).set(this.samples);
 
     this.player.buffer = newBuffer;
-    this.player.connect(audioCtx.destination);
-
+    this.player.connect(this.audioContext.destination);
+    // this.setState({samples:this.player});
+    // console.log(this.player);
     this.player.start();
   }
 
   render() {
     const samples = this.state.samples;
     return (
-      <div style={{padding:10}} className="App">
-        <div style={{padding:10}} onClick={this.startRecord}>Start recording</div>
-        <div style={{padding:10}}onClick={this.stopRecord}>Stop recording</div>
-        <div style={{padding:10}}onClick={this.play}>play</div>
-        <div> nr of samples for 2048 {this.state.samples.length}</div>
-        <div>{JSON.stringify(samples[samples.length-1])}</div>
+      <div style={{padding:15}} className="App">
+        <div style={{padding:15}} onClick={this.startRecord}>Start recording</div>
+        <div style={{padding:15}}onClick={this.stopRecord}>Stop recording</div>
+        <div style={{padding:15}}onClick={this.play}>play</div>
       </div>
      
     );
